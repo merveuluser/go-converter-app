@@ -43,7 +43,7 @@ func main() {
 				fmt.Fprintf(w, "Unsupported conversion type. Supported conversions:\n\nmeterstoinches\nkilometerstomiles\nkilometerstomiles\nkilogramstopounds\ncelsiustofahrenheit\nfahrenheittocelsius\ncelsiustokelvin\nkelvintocelsius\nfahrenheittokelvin\nkelvintofahrenheit")
 				return
 			}
-			// get the keys from the map and print it
+			// get the keys from the map and print them
 
 			value, err := strconv.ParseFloat(valueStr, 64)
 			if err != nil {
