@@ -49,6 +49,7 @@ func CliConversion() {
 	conversionFunc, exists := ConversionFuncExist(conversionType)
 	if !exists {
 		fmt.Println(UnsupportedConversionType)
+		fmt.Println(strings.Join(conversions.ConversionTypes(), "\n"))
 		return
 	}
 	value, err := ValueStrToValue(valueStr)
