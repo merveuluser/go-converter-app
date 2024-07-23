@@ -4,41 +4,18 @@ import (
 	"fmt"
 	"github.com/merveuluser/go-converter-app/conversions"
 	"log"
-	"math"
 	"net/http"
 	"os"
 	"strconv"
 	"strings"
 )
 
-var conversionType string
-var valueStr string
-
-func RoundFloat(v float64) float64 {
-	ratio := math.Pow(10, 2)
-	return math.Round(v*ratio) / ratio
-}
-
-func Web() bool {
-	if len(os.Args) == 2 && os.Args[1] == "web" {
-		return true
-	}
-	return false
-}
-
-func Cli() bool {
-	if len(os.Args) == 4 && os.Args[1] == "convert" {
-		return true
-	}
-	return false
-}
-
 func WebConversion() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		path := r.URL.Path
 		parts := strings.Split(strings.TrimPrefix(path, "/"), "=")
 		if len(parts) != 2 {
-			http.Error(w, "Invalid URL format. Usage: /<conversion_type>=<value>", http.StatusBadRequest)
+			http.Error(w, InvalidURLFormat, http.StatusBadRequest)
 			return
 		}
 
@@ -47,12 +24,12 @@ func WebConversion() {
 
 		conversionFunc, exists := ConversionFuncExist(conversionType)
 		if !exists {
-			fmt.Fprintf(w, "Unsupported conversion type. Supported conversions:\n\nmeterstoinches\nkilometerstomiles\nkilometerstomiles\nkilogramstopounds\ncelsiustofahrenheit\nfahrenheittocelsius\ncelsiustokelvin\nkelvintocelsius\nfahrenheittokelvin\nkelvintofahrenheit")
+			fmt.Fprintf(w, UnsupportedConversionType)
 			return
 		}
 		value, err := ValueStrToValue(valueStr)
 		if err != nil {
-			fmt.Fprintf(w, "Invalid value. Please provide a numeric value.")
+			fmt.Fprintf(w, InvalidValue)
 			return
 		}
 
@@ -71,12 +48,12 @@ func CliConversion() {
 
 	conversionFunc, exists := ConversionFuncExist(conversionType)
 	if !exists {
-		fmt.Println("Unsupported conversion type. Supported conversions:\n\nmeterstoinches\nkilometerstomiles\nkilometerstomiles\nkilogramstopounds\ncelsiustofahrenheit\nfahrenheittocelsius\ncelsiustokelvin\nkelvintocelsius\nfahrenheittokelvin\nkelvintofahrenheit")
+		fmt.Println(UnsupportedConversionType)
 		return
 	}
 	value, err := ValueStrToValue(valueStr)
 	if err != nil {
-		fmt.Println("Invalid value. Please provide a numeric value.")
+		fmt.Println(InvalidValue)
 		return
 	}
 
