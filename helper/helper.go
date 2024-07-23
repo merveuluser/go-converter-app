@@ -63,7 +63,7 @@ func CliConversion() {
 }
 
 func ConversionFuncExist(conversionType string) (conversions.ConversionFunc, bool) {
-	conversionFunc, exists := conversions.ConversionMap[conversionType]
+	conversionFunc, exists := conversions.GetConversionFunc(conversionType)
 	return conversionFunc, exists
 }
 
